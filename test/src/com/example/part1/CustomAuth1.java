@@ -1,0 +1,76 @@
+package com.example.part1;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+/**
+ * Servlet implementation class CustomAuth1
+ */
+@WebServlet("/CustomAuth1")
+public class CustomAuth1 extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CustomAuth1() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.setContentType("text/html;charset=SHIFT_JIS");
+		PrintWriter out = response.getWriter();
+		
+		String target = request.getRequestURI();
+		
+		HttpSession session = request.getSession(false);
+		
+		if(session == null){
+			/*まだ認証されていない*/
+			session = request.getSession(true);
+			session.setAttribute("target", target);
+			
+			response.sendRedirect("./Login2");
+		}else{
+			Object loginCheck = session.getAttribute("login");
+			if(loginCheck == null){
+				/*まだ認証されていない*/
+				session.setAttribute("target", target);
+				response.sendRedirect("./Login2");
+			}
+		}
+		
+		out.println("<html>");
+		out.println("<head>");
+		out.println("<title>ユーザ認証テスト</title>");
+		out.println("</head>");
+		out.println("<body>");
+		
+		out.println("<p>テストページ1</p>");
+		
+		out.println("<p><a href=\"./CustomAuth2\">テストページ2へ</a></p>");
+		
+		out.println("</body>");
+		out.println("</html>");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+}
